@@ -2,7 +2,10 @@
 
 /**
  * @file
- * @todo Admin settings form and config.
+ * @todo Admin settings form and config:
+ *   Set default form item to disabled via hook_form_alter? Maybe use it as
+ *   fallback?
+ *   What other settings might make sense?
  */
 
 /**
@@ -17,7 +20,7 @@ function frontpage_multilingual_url_outbound_alter(&$path, &$options, $original_
   }
 
   global $language;
-  $paths_per_language = frontpage_multilingual_get_config();
+  $paths_per_language = config_get('frontpage_multilingual.settings', 'languages');
   if (in_array($path, array_values($paths_per_language))) {
     $path = '';
   }
@@ -33,23 +36,88 @@ function frontpage_multilingual_url_inbound_alter(&$path, $original_path, $path_
   global $language, $base_path;
 
   if (backdrop_is_front_page()) {
-    $paths_per_language = frontpage_multilingual_get_config();
+    $paths_per_language = config_get('frontpage_multilingual.settings', 'languages');
     $path = $paths_per_language[$language->langcode];
   }
 }
 
 /**
- * Helper function sketch.
+ * Implements hook_menu().
  *
- * Might need converson alias/system and vice versa, hardcoded for now.
- * Very likely I need the system path only.
- * This really confuses the language switcher when a node has translations, but
- * the <front> fake translation is set to something else.
+ * Settings form for frontpage_multilingual.
  */
-function frontpage_multilingual_get_config() {
-  return array(
-    'de' => 'node/16',// node
-    'en' => 'home',// layout
-    'fr' => 'crash-vbo',// view
+function frontpage_multilingual_menu() {
+  $items = array();
+  $items['admin/config/system/frontpages'] = array(
+    'title' => 'Website-Frontpages',
+    'description' => 'Website frontpage(s) configuration per language',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('frontpage_multilingual_settings'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
   );
+  return $items;
+}
+
+/**
+ * Settings form.
+ *
+ * @todo validate/sanitize.
+ */
+function frontpage_multilingual_settings() {
+  $form = array();
+  $form['#config'] = 'frontpage_multilingual.settings';
+  $form['#tree'] = TRUE;
+
+  $languages = language_list(TRUE);
+  $config = config_get('frontpage_multilingual.settings');
+
+  $form['languages'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'Set the frontpage per language',// @todo
+    '#description' => 'bla descr',// @todo
+  );
+  foreach ($languages as $langcode => $language) {
+    $title = t('Set the frontpage for %lang', array(
+      '%lang' => $language->name,
+    ));
+    $form['languages'][$langcode] = array(
+      '#type' => 'textfield',
+      '#title' => $title,
+      '#default_value' => isset($config['languages'][$langcode]) ? $config['languages'][$langcode] : '',
+    );
+  }
+  return system_settings_form($form);
+}
+
+/**
+ * Custom validation function.
+ *
+ * Validate values and cleanup form_state.
+ */
+function frontpage_multilingual_settings_validate($form, &$form_state) {
+  unset($form_state['values']['actions']);
+  foreach ($form_state['values']['languages'] as $langcode => $path) {
+    if (!backdrop_valid_path($path)) {
+      form_error($form['languages'][$langcode], t('%path is not a valid path', array(
+        '%path' => $path,
+      )));
+    }
+    if ($path == '<front>' || url_is_external($path)) {
+      form_error($form['languages'][$langcode], t('%path is not usable as frontpage path', array(
+        '%path' => $path,
+      )));
+    }
+  }
+}
+
+/**
+ * Implements hook_config_info().
+ */
+function frontpage_multilingual_config_info() {
+  $prefixes['frontpage_multilingual.settings'] = array(
+    'label' => t('Frontpage Multilingual settings'),
+    'group' => t('Configuration'),
+  );
+  return $prefixes;
 }
