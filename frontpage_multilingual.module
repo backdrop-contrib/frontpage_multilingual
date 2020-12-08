@@ -1,0 +1,55 @@
+<?php
+
+/**
+ * @file
+ * @todo Admin settings form and config.
+ */
+
+/**
+ * Implements hook_url_outbound_alter().
+ *
+ * Fake urls for "front" paths of all kinds, also overrides primary tabs.
+ * @see url()
+ */
+function frontpage_multilingual_url_outbound_alter(&$path, &$options, $original_path) {
+  if ($options['external']) {
+    return;
+  }
+
+  global $language;
+  $paths_per_language = frontpage_multilingual_get_config();
+  if (in_array($path, array_values($paths_per_language))) {
+    $path = '';
+  }
+}
+
+/**
+ * Implements hook_url_inbound_alter().
+ *
+ * Get the right content for '<front>'.
+ * @see backdrop_get_normal_path()
+ */
+function frontpage_multilingual_url_inbound_alter(&$path, $original_path, $path_language) {
+  global $language, $base_path;
+
+  if (backdrop_is_front_page()) {
+    $paths_per_language = frontpage_multilingual_get_config();
+    $path = $paths_per_language[$language->langcode];
+  }
+}
+
+/**
+ * Helper function sketch.
+ *
+ * Might need converson alias/system and vice versa, hardcoded for now.
+ * Very likely I need the system path only.
+ * This really confuses the language switcher when a node has translations, but
+ * the <front> fake translation is set to something else.
+ */
+function frontpage_multilingual_get_config() {
+  return array(
+    'de' => 'node/16',// node
+    'en' => 'home',// layout
+    'fr' => 'crash-vbo',// view
+  );
+}

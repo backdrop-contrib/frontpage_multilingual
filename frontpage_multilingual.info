@@ -1,0 +1,6 @@
+name = Frontpage Multilingual
+description = Allows to set the frontpage per language, overriding the default system setting.
+backdrop = 1.x
+type = module
+
+dependencies[] = language
