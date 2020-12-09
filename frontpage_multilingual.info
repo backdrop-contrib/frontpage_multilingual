@@ -2,6 +2,7 @@ name = Frontpage Multilingual
 description = Allows to set the frontpage per language, overriding the default system setting.
 backdrop = 1.x
 type = module
+package = Multilingual
 configure = admin/config/system/frontpages
 
 dependencies[] = language
