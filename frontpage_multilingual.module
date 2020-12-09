@@ -81,7 +81,7 @@ function frontpage_multilingual_settings() {
   $form['languages'] = array(
     '#type' => 'fieldset',
     '#title' => t('Set the frontpage per language'),
-    '#description' => t('This has to be the system path, for instance "node/4" for a node, or the path of a layout (like "home") or a view.'),
+    '#description' => t('These have to be system paths, for instance "node/4" for a node, or the path of a layout or a view (like "home"). No leading or trailing slashes.'),
   );
   foreach ($languages as $langcode => $language) {
     $title = t('Frontpage for %lang', array(
@@ -91,7 +91,7 @@ function frontpage_multilingual_settings() {
       '#type' => 'textfield',
       '#title' => $title,
       '#default_value' => isset($config['languages'][$langcode]) ? $config['languages'][$langcode] : '',
-      '#size' => 36,
+      '#size' => 32,
       '#field_prefix' => url(NULL, array('absolute' => TRUE, 'language' => $language)),
     );
   }
