@@ -86,13 +86,15 @@ function frontpage_multilingual_settings() {
     '#description' => 'bla descr has to be the system path',// @todo
   );
   foreach ($languages as $langcode => $language) {
-    $title = t('Set the frontpage for %lang', array(
+    $title = t('Frontpage for %lang', array(
       '%lang' => $language->name,
     ));
     $form['languages'][$langcode] = array(
       '#type' => 'textfield',
       '#title' => $title,
       '#default_value' => isset($config['languages'][$langcode]) ? $config['languages'][$langcode] : '',
+      '#size' => 36,
+      '#field_prefix' => url(NULL, array('absolute' => TRUE, 'language' => $language)),
     );
   }
   return system_settings_form($form);
