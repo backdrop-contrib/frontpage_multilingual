@@ -7,11 +7,21 @@ but a layout or node for another one.
 
 ## Installation
 
-Install this module using the [official Backdrop CMS instructions](https://backdropcms.org/guide/modules)
+Install this module using the [official Backdrop CMS instructions](https://backdropcms.org/guide/modules).
+
+Go to admin/config/system/frontpages to configure the pages per language.
+
+## Issues
+
+Bugs and feature requests should be reported in the [Issue Queue](https://github.com/backdrop-contrib/frontpage_multilingual/issues).
 
 ## Current maintainers
 
 * [Indigoxela](https://github.com/indigoxela)
+
+## Credits
+
+Written for Backdrop CMS by Indigoxela.
 
 ## License
 
