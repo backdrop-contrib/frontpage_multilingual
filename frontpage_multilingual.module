@@ -2,16 +2,13 @@
 
 /**
  * @file
- * @todo Admin settings form and config:
- *   Set default form item to disabled via hook_form_alter? Maybe use it as
- *   fallback?
- *   What other settings might make sense?
  */
 
 /**
  * Implements hook_url_outbound_alter().
  *
- * Fake urls for "front" paths of all kinds, also overrides primary tabs.
+ * Override urls for configured front paths of all kinds, also overrides primary
+ * tabs.
  * @see url()
  */
 function frontpage_multilingual_url_outbound_alter(&$path, &$options, $original_path) {
@@ -29,7 +26,7 @@ function frontpage_multilingual_url_outbound_alter(&$path, &$options, $original_
 /**
  * Implements hook_url_inbound_alter().
  *
- * Get the right content for '<front>'.
+ * Get the right content for this front page.
  * @see backdrop_get_normal_path()
  */
 function frontpage_multilingual_url_inbound_alter(&$path, $original_path, $path_language) {
@@ -68,9 +65,7 @@ function frontpage_multilingual_menu() {
 }
 
 /**
- * Settings form.
- *
- * @todo validate/sanitize.
+ * Settings form for this module.
  */
 function frontpage_multilingual_settings() {
   $form = array();
@@ -82,8 +77,8 @@ function frontpage_multilingual_settings() {
 
   $form['languages'] = array(
     '#type' => 'fieldset',
-    '#title' => 'Set the frontpage per language',// @todo
-    '#description' => 'bla descr has to be the system path',// @todo
+    '#title' => t('Set the frontpage per language'),
+    '#description' => t('This has to be the system path, for instance "node/4" for a node, or the path of a layout (like "home") or a view.'),
   );
   foreach ($languages as $langcode => $language) {
     $title = t('Frontpage for %lang', array(
