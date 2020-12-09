@@ -37,7 +37,15 @@ function frontpage_multilingual_url_inbound_alter(&$path, $original_path, $path_
 
   if (backdrop_is_front_page()) {
     $paths_per_language = config_get('frontpage_multilingual.settings', 'languages');
-    $path = $paths_per_language[$language->langcode];
+    if (isset($paths_per_language[$language->langcode]) && menu_get_item($paths_per_language[$language->langcode])) {
+      $path = $paths_per_language[$language->langcode];
+    }
+    else {
+      // Fallback when no entry in config yet, either because the module has
+      // just been installed or a new language has been added.
+      // Fallback when node/layout/view has been deleted.
+      $path = config_get('system.core', 'site_frontpage');
+    }
   }
 }
 
@@ -75,7 +83,7 @@ function frontpage_multilingual_settings() {
   $form['languages'] = array(
     '#type' => 'fieldset',
     '#title' => 'Set the frontpage per language',// @todo
-    '#description' => 'bla descr',// @todo
+    '#description' => 'bla descr has to be the system path',// @todo
   );
   foreach ($languages as $langcode => $language) {
     $title = t('Set the frontpage for %lang', array(
