@@ -103,16 +103,26 @@ function frontpage_multilingual_settings() {
 function frontpage_multilingual_settings_validate($form, &$form_state) {
   unset($form_state['values']['actions']);
   foreach ($form_state['values']['languages'] as $langcode => $path) {
+    // Check if the path is accessible to anonymous, temporarily store session
+    // data and restore after checking.
+    $original_session_state = backdrop_save_session();
+    backdrop_save_session(FALSE);
+    $original_user = $GLOBALS['user'];
+    $GLOBALS['user'] = backdrop_anonymous_user();
+
     if (!backdrop_valid_path($path)) {
-      form_error($form['languages'][$langcode], t('%path is not a valid path', array(
+      form_error($form['languages'][$langcode], t('%path is not a valid path or is not accessible for visitors', array(
         '%path' => $path,
       )));
     }
-    if ($path == '<front>' || url_is_external($path)) {
+    elseif ($path == '<front>' || url_is_external($path)) {
       form_error($form['languages'][$langcode], t('%path is not usable as frontpage path', array(
         '%path' => $path,
       )));
     }
+
+    $GLOBALS['user'] = $original_user;
+    backdrop_save_session($original_session_state);
   }
 }
 
