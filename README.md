@@ -1,15 +1,17 @@
 # Frontpage Multilingual
 
-Enables you to set the frontpage (startpage, home page) individually for
-every enabled language.
+Set the frontpage (startpage, home page) individually for every enabled language.
+
+You can use nodes, layouts or views and any combination. For instance a view for two languages,
+but a layout or node for another one.
 
 ## Installation
 
-Install this module using the official Backdrop CMS instructions at https://backdropcms.org/guide/modules
+Install this module using the [official Backdrop CMS instructions](https://backdropcms.org/guide/modules)
 
 ## Current maintainers
 
-* Indigoxela (https://github.com/indigoxela)
+* [Indigoxela](https://github.com/indigoxela)
 
 ## License
 
