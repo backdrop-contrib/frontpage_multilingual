@@ -30,7 +30,7 @@ function frontpage_multilingual_url_outbound_alter(&$path, &$options, $original_
  * @see backdrop_get_normal_path()
  */
 function frontpage_multilingual_url_inbound_alter(&$path, $original_path, $path_language) {
-  global $language, $base_path;
+  global $language;
 
   if (backdrop_is_front_page()) {
     $paths_per_language = config_get('frontpage_multilingual.settings', 'languages');
