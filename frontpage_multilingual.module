@@ -129,3 +129,14 @@ function frontpage_multilingual_config_info() {
   );
   return $prefixes;
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Override default setting description, add a link to this module's form.
+ */
+function frontpage_multilingual_form_system_site_information_settings_alter(&$form, &$form_state, $form_id) {
+  $form['front_page']['site_frontpage']['#description'] = t('Note that this setting is only used as fallback. To configure the front page per language, set the values in the overriding !formlink.', array(
+    '!formlink' => l(t('form'), 'admin/config/system/frontpages'),
+  ));
+}
